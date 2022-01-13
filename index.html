@@ -2,8 +2,22 @@
 <html>
     <head>
         <title>色々計算できる</title>
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     </head>
     <body>
-        テスト
+        エントロピーを求める
+        <div id="box">
+            <input v-model="text">
+            {{ text }}
+        </div>
     </body>
+
+<script>
+    vm = new Vue({
+        el: '#box',
+        data: {
+            text: "test"
+        }
+    });
+</script>
 </html>
