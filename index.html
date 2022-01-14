@@ -5,10 +5,24 @@
         <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     </head>
     <body>
-        エントロピーを求める
+        平均情報量を求める/calculate average information
         <div id="box">
-            <input v-model="text">
-            {{ text }}
+            <input type="number" v-model="box_probability">
+            <button @click="add_probability()">確率を追加する/add probability</button>
+        </br>
+            入力された確率/added element
+            <ul>
+                <li v-for="(probability,index) in probabilities">
+                    {{ probability }}
+                    <button @click="delete_element(index)">削除ボタン/delete</button>
+                </li>
+            </ul>
+                <button @click="calc_average_information()">平均情報量を求める/calculate</button>
+        </br>
+                平均情報量は{{average_information}}です
+        </br>
+                average_information is {{average_information}}.
+
         </div>
     </body>
 
@@ -16,7 +30,36 @@
     vm = new Vue({
         el: '#box',
         data: {
-            text: "test"
+            box_probability: '',
+            probabilities: [],
+            average_information: null
+        },
+        filters: {
+            filter_box_probability: function(){
+
+            }
+        },
+        methods: {
+            add_probability: function(){
+                if(this.box_probability == ''){
+
+                }else{
+                this.probabilities.push(this.box_probability);
+                }
+            },
+
+            delete_element: function(index){
+                this.probabilities.splice(index,1);
+            },
+            calc_average_information: function(){
+                let tmp = 0;
+                this.probabilities.forEach(
+                    (element) => {
+                        tmp -= element * Math.log2(element);
+                    }
+                );
+                this.average_information = tmp;
+            }
         }
     });
 </script>
