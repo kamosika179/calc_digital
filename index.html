@@ -7,7 +7,7 @@
     </head>
     <body>
         平均情報量を求める/calculate average information
-        <div id="box">
+        <div id="probability_average">
             <input type="number" v-model="box_probability">
             <button @click="add_probability()">確率を追加する/add probability</button>
         </br>
@@ -25,11 +25,42 @@
                 average_information is {{average_information}}.
 
         </div>
+
+        符号化の効率eを求める/calculate efficiency of an encoding
+    </br>
+        <input type="number" v-bind:placeholder="2" v-model="num_r" >N(2)元符号
+        <div id="efficiency_of_an_encoding">
+            <input type="number" v-model="box_probability">
+            <button @click="add_probability()">確率を順番に追加する/add probability</button>
+        </br>
+            入力された確率/added element
+            <ul>
+                <li v-for="(probability,index) in probabilities">
+                    {{ probability }}
+                    <button @click="delete_element(index)">削除ボタン/delete</button>
+                </li>
+            </ul>
+        </br>
+
+            <input type="number" v-model='box_length'>
+            <button @click='add_length()'>長さを順番に追加する/add length</button>
+        <ul>
+            <li v-for="(length,index) in lengths">
+                {{length}}
+                <button @click="delete_element_length(index)">削除ボタン/delete</button>
+            </li>
+        </ul>
+            <button @click='calc_efficiency_of_an_encoding()'>符号化の効率eを求める</button>
+                符号の効率eは{{ efficiency_of_an_encoding }}です
+        </br>
+
+        </div>
+
     </body>
 
 <script>
     vm = new Vue({
-        el: '#box',
+        el: '#probability_average',
         data: {
             box_probability: '',
             probabilities: [],
@@ -63,5 +94,66 @@
             }
         }
     });
+
+    vm2 = new Vue({
+        el: '#efficiency_of_an_encoding',
+        data: {
+            box_probability: '',
+            probabilities: [],
+            box_length: '',
+            lengths: [],
+            num_r: 2,
+            efficiency_of_an_encoding: null
+        },
+        filters: {
+            filter_box_probability: function(){
+
+            }
+        },
+        methods: {
+            add_probability: function(){
+                if(this.box_probability == ''){
+
+                }else{
+                this.probabilities.push(this.box_probability);
+                }
+            },
+
+            add_length: function(){
+                if(this.box_length == ''){
+
+                }else{
+                this.lengths.push(this.box_length);
+                }
+            },
+
+            delete_element: function(index){
+                this.probabilities.splice(index,1);
+            },
+
+            delete_element_length: function(index){
+                this.lengths.splice(index,1)
+            },
+
+            calc_efficiency_of_an_encoding: function(){
+                let tmp = 0;
+                let entropy = 0;
+                let average_of_length = 0;
+                this.probabilities.forEach(
+                    (element) => {
+                        entropy -= element * Math.log2(element);
+                    }
+                );
+
+                for(let i=0 ; i < this.lengths.length;i++){
+                    average_of_length += this.lengths[i] * this.probabilities[i]
+                }
+
+                tmp = (entropy/average_of_length)/Math.log2(this.num_r)
+                this.efficiency_of_an_encoding = tmp;
+            }
+        }
+    });
+
 </script>
 </html>
